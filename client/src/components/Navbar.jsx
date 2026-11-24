@@ -16,7 +16,7 @@ export default function Navbar({ onOpenTerminal }) {
 
   const navLinks = [
     { name: 'Overview', href: '#overview' },
-    { name: 'Workbench', href: '#workbench' },
+    // { name: 'Workbench', href: '#workbench' },
     { name: 'Projects', href: '#projects' },
     { name: 'Experience', href: '#experience' },
     { name: 'Skills', href: '#skills' },

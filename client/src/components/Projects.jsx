@@ -70,16 +70,6 @@ export default function Projects() {
                       {project.badge}
                     </span>
                     <div className="flex items-center gap-2">
-                      {hasSimulator && (
-                        <button
-                          onClick={() => handleLaunchWorkbench(project.id)}
-                          className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 font-mono font-medium"
-                          title="Test in Interactive Workbench"
-                        >
-                          <Zap className="w-3.5 h-3.5" />
-                          <span>Test Live</span>
-                        </button>
-                      )}
                       <button
                         onClick={() => setSelectedArch(project)}
                         className="text-xs text-zinc-400 hover:text-white transition-colors flex items-center gap-1 font-mono"
@@ -122,28 +112,16 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {/* Footer: Tags and Test Button */}
-                <div className="flex items-center justify-between pt-4 border-t border-zinc-800/80 gap-2">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.tags.slice(0, 4).map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-0.5 rounded-md bg-zinc-900/90 text-[10px] font-mono text-zinc-400 border border-zinc-800/80"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  {hasSimulator && (
-                    <button
-                      onClick={() => handleLaunchWorkbench(project.id)}
-                      className="shrink-0 text-xs text-white hover:text-zinc-300 font-medium flex items-center gap-1 group"
+                {/* Footer: Tech Tags */}
+                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-800/80">
+                  {project.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="px-2.5 py-0.5 rounded-md bg-zinc-900/90 text-[11px] font-mono text-zinc-400 border border-zinc-800/80"
                     >
-                      <span>Interactive Sim</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </button>
-                  )}
+                      {t}
+                    </span>
+                  ))}
                 </div>
               </div>
             );

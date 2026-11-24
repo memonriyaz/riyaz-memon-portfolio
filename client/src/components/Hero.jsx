@@ -36,13 +36,6 @@ export default function Hero({ onOpenTerminal, onOpenResumeModal }) {
             Explore Projects
           </a>
 
-          <a
-            href="#workbench"
-            className="px-5 py-2.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 font-medium text-xs tracking-tight transition-all"
-          >
-            Interactive Workbench
-          </a>
-
           <button
             onClick={onOpenTerminal}
             className="px-4 py-2.5 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800/80 font-mono text-xs transition-all flex items-center gap-1.5"

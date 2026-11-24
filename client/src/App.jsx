@@ -37,7 +37,8 @@ export default function App() {
           onOpenResumeModal={() => setResumeOpen(true)}
         />
         
-        <ArchitectureSimulator />
+        {/* Systems & Architecture Workbench (commented for future re-enablement) */}
+        {/* <ArchitectureSimulator /> */}
         
         <Projects />
         
