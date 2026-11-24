@@ -1,22 +1,16 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle2, Copy, Linkedin, Github, MessageSquare, Sparkles } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { Mail, Phone, MapPin, Copy, Check, ArrowUpRight } from 'lucide-react';
 import { RESUME_DATA } from '../data/resumeData';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
 
-  const copyToClipboard = (text, type) => {
-    navigator.clipboard?.writeText(text);
+  const copyText = (val, type) => {
+    navigator.clipboard?.writeText(val);
     if (type === 'email') {
       setCopiedEmail(true);
       setTimeout(() => setCopiedEmail(false), 2000);
@@ -29,228 +23,153 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
-
     setSubmitting(true);
 
     try {
-      // Send to MERN backend API
-      const res = await fetch('/api/contact', {
+      await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      
-      // Even if offline / static GitHub pages, treat as successful and save to localStorage
-      const prevMsgs = JSON.parse(localStorage.getItem('portfolio_messages') || '[]');
-      prevMsgs.push({ ...formData, timestamp: new Date().toISOString() });
-      localStorage.setItem('portfolio_messages', JSON.stringify(prevMsgs));
+    } catch (err) {}
 
-      try {
-        confetti({
-          particleCount: 70,
-          spread: 60,
-          origin: { y: 0.7 }
-        });
-      } catch (err) {}
+    const list = JSON.parse(localStorage.getItem('messages') || '[]');
+    list.push({ ...formData, time: new Date().toISOString() });
+    localStorage.setItem('messages', JSON.stringify(list));
 
-      setSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (err) {
-      console.log('Static mode fallback:', err);
-      setSubmitted(true);
-    } finally {
-      setSubmitting(false);
-    }
+    setSubmitted(true);
+    setSubmitting(false);
+    setFormData({ name: '', email: '', message: '' });
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[350px] bg-cyan-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono mb-4">
-            <Mail className="w-3.5 h-3.5" />
-            <span>Connect &amp; Collaborate</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
-            Let's Build Something <span className="text-gradient-cyan">Exceptional</span>
-          </h2>
-          <p className="text-slate-400 text-base">
-            Whether you have an engineering role, a fintech challenge, or an innovative full-stack project, my inbox is always open.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 max-w-5xl mx-auto">
-          {/* Left Contact Information Cards */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Direct Email Card */}
-            <div className="glass-panel p-6 rounded-3xl border border-slate-800">
-              <div className="flex items-center justify-between mb-3">
-                <div className="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <button
-                  onClick={() => copyToClipboard(RESUME_DATA.personal.email, 'email')}
-                  className="px-2.5 py-1 rounded-lg bg-dark-900 border border-slate-700 text-slate-400 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors"
-                >
-                  {copiedEmail ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copiedEmail ? 'Copied' : 'Copy'}</span>
-                </button>
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-1">EMAIL DIRECT</div>
-              <a
-                href={`mailto:${RESUME_DATA.personal.email}`}
-                className="text-sm font-semibold text-white hover:text-cyan-300 break-all transition-colors"
-              >
-                {RESUME_DATA.personal.email}
-              </a>
-            </div>
-
-            {/* Phone Card */}
-            <div className="glass-panel p-6 rounded-3xl border border-slate-800">
-              <div className="flex items-center justify-between mb-3">
-                <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <button
-                  onClick={() => copyToClipboard(RESUME_DATA.personal.phone, 'phone')}
-                  className="px-2.5 py-1 rounded-lg bg-dark-900 border border-slate-700 text-slate-400 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors"
-                >
-                  {copiedPhone ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copiedPhone ? 'Copied' : 'Copy'}</span>
-                </button>
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-1">PHONE NUMBER</div>
-              <a
-                href={`tel:${RESUME_DATA.personal.phone}`}
-                className="text-sm font-semibold text-white hover:text-emerald-300 transition-colors"
-              >
-                {RESUME_DATA.personal.phone}
-              </a>
-            </div>
-
-            {/* Location & Socials */}
-            <div className="glass-panel p-6 rounded-3xl border border-slate-800">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-slate-400">LOCATION</div>
-                  <div className="text-sm font-semibold text-white">{RESUME_DATA.personal.location}</div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800/80">
-                <a
-                  href={RESUME_DATA.personal.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-3 rounded-xl bg-dark-900 border border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-2 transition-all"
-                >
-                  <Linkedin className="w-4 h-4 text-cyan-400" />
-                  <span>LinkedIn</span>
-                </a>
-                <a
-                  href={RESUME_DATA.personal.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-3 rounded-xl bg-dark-900 border border-slate-800 hover:border-purple-500/40 text-slate-300 hover:text-white text-xs font-medium flex items-center gap-2 transition-all"
-                >
-                  <Github className="w-4 h-4 text-purple-400" />
-                  <span>GitHub</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Interactive Contact Form */}
-          <div className="lg:col-span-3">
-            <div className="glass-panel-glow p-8 rounded-3xl border border-slate-800 relative">
-              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-cyan-400" />
-                <span>Send a Direct Message</span>
-              </h3>
-              <p className="text-xs text-slate-400 mb-6">
-                Connected to portfolio MERN backend API with instant confirmation.
+    <section id="contact" className="py-24 border-t border-zinc-900 relative">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+          {/* Left Column: Direct Info */}
+          <div className="md:col-span-5 space-y-6">
+            <div>
+              <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 mb-2">Get in Touch</div>
+              <h2 className="text-3xl font-bold tracking-tight text-white mb-3">
+                Let’s talk.
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                Currently open to software engineering and full-stack developer roles. Feel free to reach out directly.
               </p>
+            </div>
 
+            <div className="space-y-3 pt-2">
+              <div className="apple-card p-3.5 rounded-xl flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] font-mono text-zinc-500 uppercase">Email</div>
+                  <a href={`mailto:${RESUME_DATA.personal.email}`} className="text-xs text-zinc-200 hover:underline">
+                    {RESUME_DATA.personal.email}
+                  </a>
+                </div>
+                <button
+                  onClick={() => copyText(RESUME_DATA.personal.email, 'email')}
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                >
+                  {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+
+              <div className="apple-card p-3.5 rounded-xl flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] font-mono text-zinc-500 uppercase">Phone</div>
+                  <a href={`tel:${RESUME_DATA.personal.phone}`} className="text-xs text-zinc-200 hover:underline">
+                    {RESUME_DATA.personal.phone}
+                  </a>
+                </div>
+                <button
+                  onClick={() => copyText(RESUME_DATA.personal.phone, 'phone')}
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                >
+                  {copiedPhone ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+
+              <div className="apple-card p-3.5 rounded-xl">
+                <div className="text-[10px] font-mono text-zinc-500 uppercase">Location</div>
+                <div className="text-xs text-zinc-200">{RESUME_DATA.personal.location}</div>
+              </div>
+            </div>
+
+            <div className="flex gap-4 pt-2 text-xs text-zinc-400">
+              <a href={RESUME_DATA.personal.linkedin} target="_blank" rel="noreferrer" className="hover:text-white flex items-center gap-1">
+                <span>LinkedIn</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </a>
+              <a href={RESUME_DATA.personal.github} target="_blank" rel="noreferrer" className="hover:text-white flex items-center gap-1">
+                <span>GitHub</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Clean Form */}
+          <div className="md:col-span-7">
+            <div className="apple-card rounded-2xl p-6 sm:p-7">
               {submitted ? (
-                <div className="p-6 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-center space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
-                    <CheckCircle2 className="w-6 h-6" />
+                <div className="py-8 text-center space-y-2">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
+                    <Check className="w-4 h-4" />
                   </div>
-                  <h4 className="text-lg font-bold text-white">Message Dispatched!</h4>
-                  <p className="text-xs text-slate-300 max-w-md mx-auto">
-                    Thank you! Riyaz Memon has received your message and will get back to you shortly at the email provided.
+                  <h3 className="text-base font-semibold text-white">Message received.</h3>
+                  <p className="text-xs text-zinc-400">
+                    Thank you for reaching out. Riyaz will respond to your email shortly.
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="px-4 py-2 rounded-xl bg-dark-900 border border-slate-700 text-xs text-slate-300 hover:text-white"
+                    className="mt-4 text-xs text-zinc-400 hover:text-white underline"
                   >
-                    Send Another Note
+                    Send another message
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-mono text-slate-400 block mb-1.5">YOUR NAME *</label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. Sarah Jenkins"
-                        className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-mono text-slate-400 block mb-1.5">EMAIL ADDRESS *</label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="sarah@company.com"
-                        className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"
-                      />
-                    </div>
-                  </div>
-
                   <div>
-                    <label className="text-xs font-mono text-slate-400 block mb-1.5">SUBJECT</label>
+                    <label className="text-[11px] font-mono text-zinc-500 uppercase block mb-1.5">Name</label>
                     <input
                       type="text"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      placeholder="Opportunity / Project Consultation / Collaboration"
-                      className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"
+                      required
+                      placeholder="Jane Doe"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-zinc-900/80 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-zinc-500"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-mono text-slate-400 block mb-1.5">MESSAGE *</label>
+                    <label className="text-[11px] font-mono text-zinc-500 uppercase block mb-1.5">Email</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="jane@company.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full bg-zinc-900/80 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-zinc-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-mono text-zinc-500 uppercase block mb-1.5">Message</label>
                     <textarea
                       required
-                      rows={5}
+                      rows={4}
+                      placeholder="Discussing an opportunity, project, or role..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Tell me about your project, team, or role..."
-                      className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 resize-none"
+                      className="w-full bg-zinc-900/80 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-zinc-500 resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] disabled:opacity-50"
+                    className="w-full py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-medium tracking-tight transition-all disabled:opacity-50"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>{submitting ? 'Transmitting to Server...' : 'Dispatch Message'}</span>
+                    {submitting ? 'Transmitting...' : 'Send Message'}
                   </button>
                 </form>
               )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Github, Linkedin, Mail, Menu, X, Code2, Sparkles, ExternalLink } from 'lucide-react';
+import { Terminal, Github, Linkedin, Mail, Menu, X, ArrowUpRight } from 'lucide-react';
 import { RESUME_DATA } from '../data/resumeData';
 
 export default function Navbar({ onOpenTerminal }) {
@@ -15,149 +15,132 @@ export default function Navbar({ onOpenTerminal }) {
   }, []);
 
   const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
+    { name: 'Overview', href: '#overview' },
+    { name: 'Workbench', href: '#workbench' },
     { name: 'Projects', href: '#projects' },
-    { name: 'Architecture Lab', href: '#architecture-lab' },
     { name: 'Experience', href: '#experience' },
+    { name: 'Skills', href: '#skills' },
     { name: 'Contact', href: '#contact' },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-      isScrolled ? 'glass-panel py-3 shadow-lg shadow-black/40 border-b border-slate-800' : 'bg-transparent py-5'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 p-[1.5px] transition-transform duration-300 group-hover:scale-105">
-              <div className="w-full h-full bg-dark-900 rounded-[10px] flex items-center justify-center font-mono font-bold text-cyan-400 group-hover:text-white transition-colors">
-                RM
-              </div>
-            </div>
-            <div>
-              <span className="font-bold text-lg tracking-tight text-white group-hover:text-cyan-300 transition-colors">
-                {RESUME_DATA.personal.name}
-              </span>
-              <div className="flex items-center gap-1.5 text-xs text-emerald-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>Active Engineer @ Capgemini</span>
-              </div>
-            </div>
+    <header className="fixed top-0 left-0 right-0 z-40 transition-all duration-300 pt-4 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto">
+        <nav className={`apple-glass rounded-full px-5 py-2.5 transition-all duration-300 flex items-center justify-between shadow-2xl ${
+          isScrolled ? 'border-white/10 bg-black/80' : 'border-white/[0.08] bg-black/60'
+        }`}>
+          {/* Logo / Monogram */}
+          <a href="#" className="flex items-center gap-2.5 group">
+            <span className="w-7 h-7 rounded-full bg-white text-black font-semibold text-xs flex items-center justify-center tracking-tight transition-transform duration-200 group-hover:scale-105">
+              RM
+            </span>
+            <span className="text-sm font-medium tracking-tight text-white/90 group-hover:text-white transition-colors">
+              Riyaz Memon
+            </span>
           </a>
 
-          {/* Desktop Nav Links */}
+          {/* Center Navigation Links (Apple Clean Style) */}
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors duration-200"
+                className="text-xs font-normal text-zinc-400 hover:text-white transition-colors tracking-tight"
               >
                 {link.name}
               </a>
             ))}
           </div>
 
-          {/* Desktop Action Buttons */}
-          <div className="hidden lg:flex items-center gap-3">
-            {/* Terminal Launch Pill */}
+          {/* Right Actions */}
+          <div className="hidden sm:flex items-center gap-2.5">
             <button
               onClick={onOpenTerminal}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-dark-850 hover:bg-dark-800 border border-slate-700/80 text-cyan-300 hover:text-cyan-200 text-xs font-mono transition-all hover:border-cyan-500/50 shadow-sm"
-              title="Launch interactive DevTerm shell"
+              className="px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-zinc-300 hover:text-white text-xs font-mono transition-all flex items-center gap-1.5"
+              title="Open Terminal (Ctrl + `)"
             >
-              <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-              <span>DevTerm</span>
-              <kbd className="px-1.5 py-0.5 text-[10px] bg-slate-800 rounded border border-slate-700 text-slate-400">Ctrl+`</kbd>
+              <Terminal className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Terminal</span>
             </button>
 
-            {/* Social Icons */}
             <a
               href={RESUME_DATA.personal.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800/60 rounded-lg transition-colors"
-              title="GitHub Profile"
+              className="p-1.5 text-zinc-400 hover:text-white transition-colors"
+              title="GitHub"
             >
               <Github className="w-4 h-4" />
             </a>
+
             <a
               href={RESUME_DATA.personal.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-slate-800/60 rounded-lg transition-colors"
-              title="LinkedIn Profile"
+              className="p-1.5 text-zinc-400 hover:text-white transition-colors"
+              title="LinkedIn"
             >
               <Linkedin className="w-4 h-4" />
             </a>
 
             <a
               href="#contact"
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-medium text-xs hover:from-cyan-400 hover:to-indigo-500 shadow-md shadow-cyan-500/20 transition-all hover:scale-105"
+              className="px-3.5 py-1.5 rounded-full bg-white text-black font-medium text-xs hover:bg-zinc-200 transition-colors tracking-tight"
             >
-              Get In Touch
+              Connect
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          {/* Mobile Hamburger */}
+          <div className="flex sm:hidden items-center gap-2">
             <button
               onClick={onOpenTerminal}
-              className="p-2 rounded-lg bg-dark-850 border border-slate-700 text-cyan-400"
-              title="Launch DevTerm"
+              className="p-1.5 text-zinc-400 hover:text-white"
             >
               <Terminal className="w-4 h-4" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-400 hover:text-white rounded-lg"
+              className="p-1.5 text-zinc-400 hover:text-white"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
-        </div>
-      </div>
+        </nav>
 
-      {/* Mobile dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden glass-panel border-b border-slate-800 px-4 pt-3 pb-6 mt-2 space-y-3">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-base font-medium text-slate-200 hover:text-cyan-400"
-            >
-              {link.name}
-            </a>
-          ))}
-          <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-            <div className="flex gap-3">
-              <a href={RESUME_DATA.personal.github} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white">
-                <Github className="w-5 h-5" />
+        {/* Mobile Dropdown */}
+        {mobileMenuOpen && (
+          <div className="mt-2 apple-glass rounded-2xl p-4 border border-white/10 sm:hidden space-y-2.5">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-1.5 text-sm text-zinc-300 hover:text-white tracking-tight"
+              >
+                {link.name}
               </a>
-              <a href={RESUME_DATA.personal.linkedin} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-400">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href={`mailto:${RESUME_DATA.personal.email}`} className="text-slate-400 hover:text-cyan-400">
-                <Mail className="w-5 h-5" />
+            ))}
+            <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between">
+              <div className="flex gap-3">
+                <a href={RESUME_DATA.personal.github} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-white">
+                  <Github className="w-4 h-4" />
+                </a>
+                <a href={RESUME_DATA.personal.linkedin} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-white">
+                  <Linkedin className="w-4 h-4" />
+                </a>
+              </div>
+              <a
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-1 rounded-full bg-white text-black text-xs font-medium"
+              >
+                Contact
               </a>
             </div>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenTerminal();
-              }}
-              className="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-mono flex items-center gap-2"
-            >
-              <Terminal className="w-3.5 h-3.5" />
-              DevTerm Shell
-            </button>
           </div>
-        </div>
-      )}
-    </nav>
+        )}
+      </div>
+    </header>
   );
 }
